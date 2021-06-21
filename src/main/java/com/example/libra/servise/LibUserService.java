@@ -5,7 +5,6 @@ import com.example.libra.reposit.BookRepo;
 import com.example.libra.reposit.LibraryUserRepo;
 import com.example.libra.reposit.TypesLibUserRepo;
 import com.example.libra.reposit.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,17 +12,20 @@ import java.util.List;
 
 @Service
 public class LibUserService {
-    @Autowired
-    private LibraryUserRepo libraryUserRepo;
+    private final LibraryUserRepo libraryUserRepo;
 
-    @Autowired
-    private TypesLibUserRepo typesLibUserRepo;
+    private final TypesLibUserRepo typesLibUserRepo;
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+
+    public LibUserService(LibraryUserRepo libraryUserRepo, TypesLibUserRepo typesLibUserRepo, BookRepo bookRepo, UserRepo userRepo) {
+        this.libraryUserRepo = libraryUserRepo;
+        this.typesLibUserRepo = typesLibUserRepo;
+        this.bookRepo = bookRepo;
+        this.userRepo = userRepo;
+    }
 
     public List<TypesLibUser> findAllTypes(){
         return typesLibUserRepo.findAll();

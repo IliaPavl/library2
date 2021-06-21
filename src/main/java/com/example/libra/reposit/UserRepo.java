@@ -4,7 +4,6 @@ import com.example.libra.domain.Role;
 import com.example.libra.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 import java.util.Optional;
 

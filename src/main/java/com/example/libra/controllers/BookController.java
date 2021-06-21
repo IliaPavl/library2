@@ -4,42 +4,44 @@ package com.example.libra.controllers;
 import com.example.libra.domain.*;
 import com.example.libra.reposit.BookRepo;
 import com.example.libra.servise.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/book")
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private UserSevice userSevice;
+    private final UserSevice userSevice;
 
-    @Autowired
-    private GenreServise genreServise;
+    private final GenreServise genreServise;
 
-    @Autowired
-    private StatusServise statusServise;
+    private final StatusServise statusServise;
 
-    @Autowired
-    private AgeRateServise ageRateServise;
+    private final AgeRateServise ageRateServise;
 
-    @Autowired
-    private LibUserService libUserService;
+    private final LibUserService libUserService;
 
-    @Autowired
-    private CometsServise cometsServise;
+    private final CometsServise cometsServise;
+
+    public BookController(BookService bookService, BookRepo bookRepo, UserSevice userSevice, GenreServise genreServise, StatusServise statusServise, AgeRateServise ageRateServise, LibUserService libUserService, CometsServise cometsServise) {
+        this.bookService = bookService;
+        this.bookRepo = bookRepo;
+        this.userSevice = userSevice;
+        this.genreServise = genreServise;
+        this.statusServise = statusServise;
+        this.ageRateServise = ageRateServise;
+        this.libUserService = libUserService;
+        this.cometsServise = cometsServise;
+    }
 
     @GetMapping
     public String bookList(Model model, @AuthenticationPrincipal User user) {
@@ -136,9 +138,10 @@ public class BookController {
     public String redactPagesBookTrue(
             Model model,
             @AuthenticationPrincipal User user,
-            @PathVariable String id,
-            @RequestParam(required = false, defaultValue = "") String like,
-            @RequestParam(required = false, defaultValue = "") String mark
+            @PathVariable String id
+//            ,
+//            @RequestParam(required = false, defaultValue = "") String like,
+//            @RequestParam(required = false, defaultValue = "") String mark
     ) {
 
         Book book=bookService.findById(Long.parseLong(id));
@@ -190,7 +193,7 @@ public class BookController {
             @RequestParam(required = false, defaultValue = "") String idGenre,
             @RequestParam(required = false, defaultValue = "") String idStatus,
             @RequestParam(required = false, defaultValue = "") String idAgeRate,
-            @RequestParam(required = false, defaultValue = "") String allTypes,
+//            @RequestParam(required = false, defaultValue = "") String allTypes,
             @RequestParam(required = false, defaultValue = "") String typeSearch,
             Model model
     ) {
@@ -287,7 +290,7 @@ public class BookController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user
     ){
-        boolean next=false,prev=true;
+        boolean prev=true;
         List<PageInfo> pageInfo=bookService.findAllInfoPages(id);
         bookService.addSee(id);
         PageInfo buffPage=new PageInfo();
@@ -305,7 +308,7 @@ public class BookController {
         if(pageInfo.size()==1){
             prev=false;
         }
-        model.addAttribute("isNext",next);
+        model.addAttribute("isNext",false);
         model.addAttribute("isPrev",prev);
         model.addAttribute("idBook",id);
         model.addAttribute("previousPage",buffPage);

@@ -2,48 +2,48 @@ package com.example.libra.servise;
 
 import com.example.libra.domain.*;
 import com.example.libra.reposit.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import javax.print.attribute.standard.PagesPerMinute;
 import java.sql.Date;
 import java.util.*;
 
 @Service
 public class BookService extends GenreServise{
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private GenreRepo genreRepo;
+    private final GenreRepo genreRepo;
 
-    @Autowired
-    private StatusRepo statusRepo;
+    private final StatusRepo statusRepo;
 
-    @Autowired
-    private AgeRateRepo ageRateRepo;
+    private final AgeRateRepo ageRateRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private PageRepo pageRepo;
+    private final PageRepo pageRepo;
 
-    @Autowired
-    private UserPropertyRepo userPropertyRepo;
-    @Autowired
-    private MarksRepo marksRepo;
+    private final UserPropertyRepo userPropertyRepo;
+    private final MarksRepo marksRepo;
 
-    @Autowired
-    private LikeRepo likeRepo;
+    private final LikeRepo likeRepo;
 
-    @Autowired
-    private LibraryUserRepo libraryUserRepo;
+    private final LibraryUserRepo libraryUserRepo;
 
-    @Autowired
-    private CommentRepo commentRepo;
+    private final CommentRepo commentRepo;
+
+    public BookService(StatusRepo statusRepo, BookRepo bookRepo, GenreRepo genreRepo, AgeRateRepo ageRateRepo, UserRepo userRepo, PageRepo pageRepo, UserPropertyRepo userPropertyRepo, MarksRepo marksRepo, LikeRepo likeRepo, LibraryUserRepo libraryUserRepo, CommentRepo commentRepo) {
+        this.statusRepo = statusRepo;
+        this.bookRepo = bookRepo;
+        this.genreRepo = genreRepo;
+        this.ageRateRepo = ageRateRepo;
+        this.userRepo = userRepo;
+        this.pageRepo = pageRepo;
+        this.userPropertyRepo = userPropertyRepo;
+        this.marksRepo = marksRepo;
+        this.likeRepo = likeRepo;
+        this.libraryUserRepo = libraryUserRepo;
+        this.commentRepo = commentRepo;
+    }
 
     public void addBook(String nameBook, String about, Map<String, String> form, String ageRate, String status, User user, String filname){
         Book book=new Book();
@@ -73,10 +73,6 @@ public class BookService extends GenreServise{
         roles.add(Role.AUTHOR);
         user.setRoles(roles);
         userRepo.save(user);
-    }
-
-    public void deleteMark(Marks marks){
-        marksRepo.delete(marks);
     }
 
     public void deleteBook(Book book){
@@ -115,10 +111,6 @@ public class BookService extends GenreServise{
         return bookRepo.findByNameBookContaining(namebook);
     }
 
-    public List<Genre> findAllGenres(){
-        return genreRepo.findAll();
-    }
-
     public List<Status> findAllStatus(){
         return statusRepo.findAll();
     }
@@ -134,7 +126,7 @@ public class BookService extends GenreServise{
     public List<Genre> findByGenre(Long id){return genreRepo.findAllByIdGenre(id);}
 
     public ArrayList<Book> sort(ArrayList<Book> books, int allTypes) {
-        Collections.sort(books,new CompareToSearchBook(allTypes));
+        books.sort(new CompareToSearchBook(allTypes));
         return books;
     }
 
@@ -224,7 +216,7 @@ public class BookService extends GenreServise{
         PageInfo pageInfo;
         for(Page page:pages){
             pageInfo = new PageInfo();
-            pageInfo.setId(page.getId().longValue());
+            pageInfo.setId(page.getId());
             pageInfo.setIdBook(page.getIdBook().getId());
             pageInfo.setNamePage(page.getNamePage());
             pageInfo.setNumberChapter(page.getNumberChapter());
@@ -266,7 +258,7 @@ public class BookService extends GenreServise{
         PageInfo pageInfo = new PageInfo();
         if(pageRepo.findById(idPage).isPresent()) {
             page = pageRepo.findById(idPage).get();
-            pageInfo.setId(page.getId().longValue());
+            pageInfo.setId(page.getId());
             pageInfo.setIdBook(page.getIdBook().getId());
             pageInfo.setNamePage(page.getNamePage());
             pageInfo.setNumberChapter(page.getNumberChapter());
@@ -283,7 +275,7 @@ public class BookService extends GenreServise{
         ArrayList<Book> books1=new ArrayList<>();
         ArrayList<Book> books2=new ArrayList<>();
         for(Book book:books){
-            if(book.getAuthor().getVip()==true)
+            if(book.getAuthor().getVip())
                 books1.add(book);
             else
                 books2.add(book);

@@ -5,7 +5,7 @@ import com.example.libra.domain.Book;
 import java.util.Comparator;
 
 class CompareToSearchBook implements Comparator<Book> {
-    private int allTypes;
+    private final int allTypes;
 
     public CompareToSearchBook(int allTypes) {
         this.allTypes = allTypes;

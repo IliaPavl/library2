@@ -16,8 +16,11 @@ import java.util.Map;
 
 @Controller
 public class RegistrationController {
-    @Autowired
-    private UserSevice userSevice;
+    private final UserSevice userSevice;
+
+    public RegistrationController(UserSevice userSevice) {
+        this.userSevice = userSevice;
+    }
 
     @GetMapping("/registration")
     public String registration() {

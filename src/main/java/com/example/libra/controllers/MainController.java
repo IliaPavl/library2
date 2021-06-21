@@ -6,7 +6,6 @@ import com.example.libra.reposit.MessageReposit;
 import com.example.libra.servise.BookService;
 import com.example.libra.servise.FileService;
 import com.example.libra.servise.GenreServise;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,21 +20,25 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
 public class MainController extends FileService {
-    @Autowired
-    private MessageReposit messageRepo;
+    private final MessageReposit messageRepo;
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
-    @Autowired
-    private GenreServise genreServise;
+    private final GenreServise genreServise;
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    public MainController(MessageReposit messageRepo, BookService bookService, GenreServise genreServise) {
+        this.messageRepo = messageRepo;
+        this.bookService = bookService;
+        this.genreServise = genreServise;
+    }
 
     @GetMapping("/")
     public String greeting(Model model) {
@@ -47,22 +50,22 @@ public class MainController extends FileService {
 
 
     @GetMapping("/main/sucses")
-    public String sucs(Model model) {
+    public String sucs() {
         return "sucses";
     }
 
     @GetMapping("/main/rules")
-    public String rul(Model model) {
+    public String rul() {
         return "rules";
     }
 
     @GetMapping("/main/about")
-    public String about(Model model) {
+    public String about() {
         return "about";
     }
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        Iterable<Message> messages = messageRepo.findAll();
+        Iterable<Message> messages ;
 
         if (filter != null && !filter.isEmpty()) {
             messages = messageRepo.findByTag(filter);
@@ -92,7 +95,7 @@ public class MainController extends FileService {
             model.mergeAttributes(errorsMap);
             model.addAttribute("message", message);
         } else {
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
+            if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
                 File uploadDir = new File(uploadPath);
 
                 if (!uploadDir.exists()) {

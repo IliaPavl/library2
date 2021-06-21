@@ -24,11 +24,6 @@ public class GenreServise {
         return genreRepo.findAll();
     }
 
-
-    public void addGenre(Genre genre){
-    genreRepo.save(genre);
-    }
-
     public Genre findByIdGenre(String idGenre) {
         Genre genre=new Genre();
         if(!idGenre.equals(""))

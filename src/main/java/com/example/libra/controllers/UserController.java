@@ -316,7 +316,7 @@ public class UserController extends FileService {
 
     @PostMapping("byVip")
     public String byVipUser(Model model, @AuthenticationPrincipal User user,@RequestParam String cardInfo){
-        userSevice.byVip(user,cardInfo);
+        userSevice.byVip(user);
         model.addAttribute("filenameUs", user.getUserImg());
         model.addAttribute("filenamePr", user.getUserFontImg());
         model.addAttribute("user", user);

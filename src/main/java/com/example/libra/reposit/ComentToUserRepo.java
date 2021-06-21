@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public interface ComentToUserRepo extends JpaRepository<ComentToUser, Long> {
     ArrayList<ComentToUser> findAllByAuthor(User author);
@@ -16,7 +15,6 @@ public interface ComentToUserRepo extends JpaRepository<ComentToUser, Long> {
 
     ArrayList<ComentToUser> findAllByAuthorAndPersonalAndPageUser(User author,boolean personal,User userPage);
     ComentToUser findFirstByPageUser(User user);
-    ComentToUser findTopByPageUser(User user);
 
     ArrayList<ComentToUser> findAllByPageUserAndPersonal(User user,boolean isPersonal);
     ArrayList<ComentToUser> findAllByAuthorAndPersonal(User user,boolean isPersonal);

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class StatusServise {
 
-    @Autowired
-    private StatusRepo statusRepo;
+    private final StatusRepo statusRepo;
+
+    public StatusServise(StatusRepo statusRepo) {
+        this.statusRepo = statusRepo;
+    }
 
     public Status findByIdStatus(String idStatus) {
         Status status=new Status();

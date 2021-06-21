@@ -2,13 +2,15 @@ package com.example.libra.servise;
 
 import com.example.libra.domain.AgeRate;
 import com.example.libra.reposit.AgeRateRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AgeRateServise {
-    @Autowired
-    private AgeRateRepo ageRateRepo;
+    private final AgeRateRepo ageRateRepo;
+
+    public AgeRateServise(AgeRateRepo ageRateRepo) {
+        this.ageRateRepo = ageRateRepo;
+    }
 
     public AgeRate findByIdAgeRate(String idAgeRAte) {
         AgeRate ageRate=new AgeRate();

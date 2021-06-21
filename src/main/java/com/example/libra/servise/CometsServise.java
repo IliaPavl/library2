@@ -12,35 +12,38 @@ import java.util.Optional;
 @Service
 public class CometsServise {
 
-    @Autowired
-    private CommentRepo comentRepo;
+    private final CommentRepo comentRepo;
 
-    @Autowired
-    private ComentToUserRepo comentToUserRepo;
+    private final ComentToUserRepo comentToUserRepo;
 
-    @Autowired
-    private UserSevice userSevice;
+    private final UserSevice userSevice;
 
-    @Autowired
-    private SupportRepo supportRepo;
+    private final SupportRepo supportRepo;
 
-    @Autowired
-    private PageRepo pageRepo;
+    private final PageRepo pageRepo;
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
-    @Autowired
-    private LikeRepo likeRepo;
+    private final LikeRepo likeRepo;
 
-    @Autowired
-    private MarksRepo marksRepo;
+    private final MarksRepo marksRepo;
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private RecenzRepo recenzRepo;
+    private final RecenzRepo recenzRepo;
+
+    public CometsServise(CommentRepo comentRepo, ComentToUserRepo comentToUserRepo, UserSevice userSevice, SupportRepo supportRepo, PageRepo pageRepo, BookService bookService, LikeRepo likeRepo, MarksRepo marksRepo, BookRepo bookRepo, RecenzRepo recenzRepo) {
+        this.comentRepo = comentRepo;
+        this.comentToUserRepo = comentToUserRepo;
+        this.userSevice = userSevice;
+        this.supportRepo = supportRepo;
+        this.pageRepo = pageRepo;
+        this.bookService = bookService;
+        this.likeRepo = likeRepo;
+        this.marksRepo = marksRepo;
+        this.bookRepo = bookRepo;
+        this.recenzRepo = recenzRepo;
+    }
 
     public List<ComentToUser> getComentsToUser(Long idUser,Long idAuthor,boolean isPerson){
 
@@ -122,9 +125,9 @@ public class CometsServise {
 
     }
 
-    public ComentToUser findMesToUserById(Long idMes){
-        return comentToUserRepo.findById(idMes).get();
-    }
+//    public ComentToUser findMesToUserById(Long idMes){
+//        return comentToUserRepo.findById(idMes).get();
+//    }
 
     public void idReadFalse(User user){
         ComentToUser comentToUser= comentToUserRepo.findFirstByPageUser(user);
@@ -172,7 +175,7 @@ public class CometsServise {
         }else {
              list = comentToUserRepo.findAllByAuthorAndPersonal(pageUser, false);
         }
-            int number1 = 0;
+            int number1;
             number1=list.size();
 
             buffer.setAuthor(pageUser);

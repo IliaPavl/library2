@@ -2,63 +2,64 @@ package com.example.libra.servise;
 
 import com.example.libra.domain.*;
 import com.example.libra.reposit.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class UserSevice extends FileService implements UserDetailsService {
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private SubsRepo subsRepo;
+    private final SubsRepo subsRepo;
 
-    @Autowired
-    private UserPersonalRepo userPersonalRepo;
+    private final UserPersonalRepo userPersonalRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private FriendsRepo friendsRepo;
+    private final FriendsRepo friendsRepo;
 
-    @Autowired
-    private UserPropertyRepo userPropertyRepo;
+    private final UserPropertyRepo userPropertyRepo;
 
-    @Autowired
-    private MarksRepo marksRepo;
+    private final MarksRepo marksRepo;
 
-    @Autowired
-    private LikeRepo likeRepo;
+    private final LikeRepo likeRepo;
 
-    @Autowired
-    private LibraryUserRepo libraryUserRepo;
+    private final LibraryUserRepo libraryUserRepo;
 
-    @Autowired
-    private CommentRepo commentRepo;
+    private final CommentRepo commentRepo;
 
-    @Autowired
-    private ComentToUserRepo comentToUserRepo;
+    private final ComentToUserRepo comentToUserRepo;
 
-    @Autowired
-    private SupportRepo supportRepo;
+    private final SupportRepo supportRepo;
 
-    @Autowired
-    private BookRepo bookRepo;
+    private final BookRepo bookRepo;
 
-    @Autowired
-    private PageRepo pageRepo;
+    private final PageRepo pageRepo;
+
+    public UserSevice(UserPersonalRepo userPersonalRepo, UserRepo userRepo, SubsRepo subsRepo, PasswordEncoder passwordEncoder, PageRepo pageRepo, FriendsRepo friendsRepo, UserPropertyRepo userPropertyRepo, MarksRepo marksRepo, LikeRepo likeRepo, LibraryUserRepo libraryUserRepo, SupportRepo supportRepo, CommentRepo commentRepo, BookRepo bookRepo, ComentToUserRepo comentToUserRepo) {
+        this.userPersonalRepo = userPersonalRepo;
+        this.userRepo = userRepo;
+        this.subsRepo = subsRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.pageRepo = pageRepo;
+        this.friendsRepo = friendsRepo;
+        this.userPropertyRepo = userPropertyRepo;
+        this.marksRepo = marksRepo;
+        this.likeRepo = likeRepo;
+        this.libraryUserRepo = libraryUserRepo;
+        this.supportRepo = supportRepo;
+        this.commentRepo = commentRepo;
+        this.bookRepo = bookRepo;
+        this.comentToUserRepo = comentToUserRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -92,7 +93,7 @@ public class UserSevice extends FileService implements UserDetailsService {
     public void saveUser(User user, String username,String email, Map<String, String> form) {
         user.setUsername(username);
 
-        if(email.equals(user.getEmail()) != true)
+        if(!email.equals(user.getEmail()))
         user.setEmail(email);
 
         Set<String> roles = Arrays.stream(Role.values())
@@ -123,7 +124,7 @@ public class UserSevice extends FileService implements UserDetailsService {
             user.setEmail(email);
         }
 
-        if (!StringUtils.isEmpty(password)) {
+        if (!isEmpty(password)) {
             user.setPassword(password);
         }
 
@@ -224,22 +225,12 @@ public class UserSevice extends FileService implements UserDetailsService {
     }
 
     public void vipControl(User user) {
-        if(user.getVip()!=true){
-            user.setVip(true);
-        }
-        else {
-            user.setVip(false);
-        }
+        user.setVip(!user.getVip());
         userRepo.save(user);
     }
 
     public void activControl(User user) {
-        if(user.isActive()!=true){
-            user.setActive(true);
-        }
-        else {
-            user.setActive(false);
-        }
+        user.setActive(!user.isActive());
         userRepo.save(user);
     }
 
@@ -249,15 +240,16 @@ public class UserSevice extends FileService implements UserDetailsService {
 
     public Object findBy(String searchBy, String search) {
 
-        if(searchBy.equals(",id")){
-            return  userRepo.findAllById(Long.valueOf(search).longValue());
-        }else if(searchBy.equals(",email")){
-            return userRepo.findAllByEmailContaining(search);
-        }else
-        if(searchBy.equals(",username")){
-            return userRepo.findAllByUsernameContaining(search);
+        switch (searchBy) {
+            case ",id":
+                return userRepo.findAllById(Long.valueOf(search));
+            case ",email":
+                return userRepo.findAllByEmailContaining(search);
+            case ",username":
+                return userRepo.findAllByUsernameContaining(search);
+            default:
+                return null;
         }
-        else return null;
     }
 
     public List<User> findUserByNameAndRole(Role role,String name){
@@ -271,7 +263,7 @@ public class UserSevice extends FileService implements UserDetailsService {
     public void subs(User userWhoSub, User author){
         Subs subs=new Subs(userWhoSub.getId(),author.getId());
 
-        if(subsRepo.findByIdWhoSubAndIdAuthor(userWhoSub.getId(),author.getId())==null && author.getId()!=userWhoSub.getId()) {
+        if(subsRepo.findByIdWhoSubAndIdAuthor(userWhoSub.getId(),author.getId())==null && !author.getId().equals(userWhoSub.getId())) {
             subsRepo.save(subs);
             ArrayList<Subs> subsList = subsRepo.findAllByIdWhoSub(userWhoSub.getId());
             userWhoSub.getUserPersonal().setUserSubs(subsList);
@@ -341,8 +333,9 @@ public class UserSevice extends FileService implements UserDetailsService {
     public void deleteFried(User sub,User whoSub){
         friendsRepo.delete(friendsRepo.findByAuthorFriendAndWhoSubFriend(sub,whoSub));
     }
-    public void byVip(User user,String cardInfo){
+    public void byVip(User user){
         user.setVip(true);
+
         userRepo.save(user);
     }
 
