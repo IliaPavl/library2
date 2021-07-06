@@ -73,9 +73,7 @@
                                 <br> Рэйтинг : ${book.rating}
                                 <div class="row-sm-8 m-2">
                                     <h5>Описание</h5>
-                                    <textarea class="form-control" name="about" style="height: 200px">
-                                     ${book.about}
-                                    </textarea>
+                                    <textarea class="form-control" name="about" style="height: 200px">${book.about}</textarea>
                                 </div>
                             </div>
                             <div class="card-footer">

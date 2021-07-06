@@ -27,4 +27,7 @@ public class AgeRateServise {
         }
         return ageRate;
     }
+    public AgeRate findByNameAgeRate(String NameAgeRAte) {
+        return ageRateRepo.findByAgeRate(NameAgeRAte);
+    }
 }

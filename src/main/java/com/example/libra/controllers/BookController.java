@@ -193,13 +193,13 @@ public class BookController {
             @RequestParam(required = false, defaultValue = "") String idGenre,
             @RequestParam(required = false, defaultValue = "") String idStatus,
             @RequestParam(required = false, defaultValue = "") String idAgeRate,
-//            @RequestParam(required = false, defaultValue = "") String allTypes,
             @RequestParam(required = false, defaultValue = "") String typeSearch,
+            @RequestParam(required = false, defaultValue = "") String allTypes,
             Model model
     ) {
         model.addAttribute("searchValue",textSearch);
         model.addAttribute("typeSearch",typeSearch);
-
+        allTypes="3";
         if (textSearch != null && !textSearch.isEmpty()) {
             model.addAttribute("authors",new ArrayList<User>());
             model.addAttribute("books",bookService.findByNamebook(textSearch));
@@ -207,6 +207,7 @@ public class BookController {
             model.addAttribute("authors",new ArrayList<User>());
             model.addAttribute("books",bookService.findAllBook());
         }
+
         model.addAttribute("idGenre",genreServise.findByIdGenre(idGenre));
         model.addAttribute("idStatus",statusServise.findByIdStatus(idStatus));
         model.addAttribute("idAgeRate",ageRateServise.findByIdAgeRate(idAgeRate));

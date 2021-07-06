@@ -3,7 +3,7 @@
         <div class="form-group " >
             <label class="col-sm-2 col-form-label">Имя пользователя :</label>
             <div class="col-sm-6">
-                <input type="text" name="username" value="<#if user??>${user.username}</#if>"
+                <input type="text" name="username" <#if username??>value="${username}"</#if>
                        class="form-control ${(usernameError??)?string('is-invalid', '')}"
                        placeholder="Имя пользователя" />
                 <#if usernameError??>
@@ -18,7 +18,11 @@
             <div class="col-sm-6">
                 <input type="password" name="password"
                        class="form-control ${(passwordError??)?string('is-invalid', '')}"
-                       placeholder="Пароль" />
+                       placeholder="Пароль"
+                <#if pass??>
+                    value="${pass}"
+                </#if>
+                />
                 <#if passwordError??>
                     <div class="invalid-feedback">
                         ${passwordError}
@@ -45,7 +49,11 @@
                 <div class="col-sm-6">
                     <input type="email" name="email" value="<#if user??>${user.email}</#if>"
                            class="form-control ${(emailError??)?string('is-invalid', '')}"
-                           placeholder="some@some.com" />
+                           placeholder="some@some.com"
+                    <#if email??>
+                        value="${email}"
+                    </#if>
+                    />
                     <#if emailError??>
                         <div class="invalid-feedback">
                             ${emailError}

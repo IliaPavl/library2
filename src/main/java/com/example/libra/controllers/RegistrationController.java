@@ -36,11 +36,23 @@ public class RegistrationController {
     ) {
         boolean isConfirmEmpty =StringUtils.isEmpty(passwordConfirm);
         if(isConfirmEmpty){
-            model.addAttribute("password2Error","Password confirmation cannot be empty");
+            model.addAttribute("password2Error","Необходимо повторить пароль!");
+        }
+
+        if(user.getUsername()!=null){
+            model.addAttribute("username",user.getUsername());
+        }
+
+        if(user.getPassword()!=null){
+            model.addAttribute("pass",user.getPassword());
+        }
+
+        if(user.getEmail()!=null){
+            model.addAttribute("email",user.getEmail());
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(passwordConfirm)) {
-            model.addAttribute("passwordError", "Passwords are different!");
+            model.addAttribute("passwordError", "Пароли не совпадают!");
         }
 
         if (isConfirmEmpty || bindingResult.hasErrors()) {
@@ -52,10 +64,11 @@ public class RegistrationController {
         }
 
         if (!userSevice.addUser(user)) {
-            model.addAttribute("usernameError", "User exists!");
+            model.addAttribute("usernameError", "Такой пользователь уже есть");
             return "registration";
         }
 
         return "redirect:/login";
     }
+
 }

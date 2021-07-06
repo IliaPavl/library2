@@ -346,5 +346,39 @@ public class BookService extends GenreServise{
         }
         return books;
     }
+
+//    public List<Book> sortByTypes(List<Book> books, String typeSort) {
+//        if (typeSort=="0")
+//        {
+//            Collections.sort(books, (o1, o2) -> {
+//                if(o1.getMarks() == o2.getMarks()) return 0;
+//                return o1.getMarks() < o2.getMarks() ? 1 : -1;
+//            });
+//        }else if (typeSort=="1")
+//        {
+//            Collections.sort(books, (o1, o2) -> {
+//                if(o1.getDateUpdate() == o2.getDateUpdate()) return 0;
+//                return o1.getDateUpdate().compareTo(o2.getDateUpdate());
+//            });
+//        }else if (typeSort=="2")
+//        {
+//            Collections.sort(books, (o1, o2) -> {
+//                if(o1.getDatePublish() == o2.getDatePublish()) return 0;
+//                return o1.getDatePublish().compareTo(o2.getDatePublish());
+//            });
+//        }else if (typeSort=="3")
+//        {
+//            Collections.sort(books, (o1, o2) -> {
+//                if(o1.getLenghtBook() == o2.getLenghtBook()) return 0;
+//                return o1.getLenghtBook() < o2.getLenghtBook() ? 1 : -1;
+//            });
+//        }else if (typeSort=="4"){
+//            Collections.sort(books, (o1, o2) -> {
+//                if(o1.getViews() == o2.getViews()) return 0;
+//                return o1.getViews() < o2.getViews() ? 1 : -1;
+//            });
+//        }
+//        return books;
+//    }
 }
 

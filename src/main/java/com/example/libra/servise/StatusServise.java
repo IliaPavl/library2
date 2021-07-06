@@ -29,4 +29,8 @@ public class StatusServise {
         }
         return status;
     }
+    public Status findByNameStatus(String nameStatus) {
+        return statusRepo.findByNameStatus(nameStatus);
+    }
+
 }

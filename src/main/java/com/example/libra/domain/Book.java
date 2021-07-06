@@ -2,6 +2,9 @@ package com.example.libra.domain;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +17,7 @@ public class Book {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotBlank(message = "Название книги не должно быть пустым")
     private String nameBook;
     private int lenghtBook;
     private double rating;
@@ -23,6 +27,7 @@ public class Book {
     private String imgBook;
     private Date datePublish;
     private Date dateUpdate;
+    @NotBlank(message = "Описание книги не должно быть пустым")
     private String about;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -33,6 +38,7 @@ public class Book {
     @JoinColumn(name = "recenz")
     private Recenz recenz;
 
+    @NotNull(message = "У книги должен быть возрастной рейтинг")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rate_age")
     private AgeRate ageRate;
@@ -41,10 +47,12 @@ public class Book {
     @JoinColumn(name = "user_id")
     private User author;
 
+    @NotNull(message = "У книги должен быть статус")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_status")
     private Status status;
 
+    @NotNull(message = "У книги должны быть жанры")
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     private List<Genre> genres;

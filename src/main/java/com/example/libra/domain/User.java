@@ -17,9 +17,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = "Имя пользователя не введено")
     private String username;
-    @NotBlank(message = "Password cannot be empty")
+    @NotBlank(message = "Пароль не введен")
     private String password;
 
     private String userImg;
@@ -38,8 +38,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_personal")
     private UserPersonal userPersonal;
 
-    @Email(message = "Email is not correct")
-    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Некорректно введен email")
+    @NotBlank(message = "Email не должен быть пустым")
     private String email;
     private boolean vip;
 

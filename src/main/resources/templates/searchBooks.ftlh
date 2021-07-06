@@ -56,7 +56,7 @@
                                 <option value="1">По дате обновления</option>
                                 <option value="2">По дате добавления</option>
                                 <option value="3">По колличеству страниц</option>
-                                <option value="3">По колличеству просмотров</option>
+                                <option value="4">По колличеству просмотров</option>
                             </select>
                         </div>
                     </div>

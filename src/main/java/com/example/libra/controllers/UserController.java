@@ -1,12 +1,9 @@
 package com.example.libra.controllers;
 
 import com.example.libra.domain.*;
-import com.example.libra.reposit.ComentToUserRepo;
 import com.example.libra.servise.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,20 +20,29 @@ import java.util.Map;
 @RequestMapping("/user")
 
 public class UserController extends FileService {
-    @Autowired
-    private UserSevice userSevice;
+    private final UserSevice userSevice;
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
-    @Autowired
-    private GenreServise genreServise;
+    private final GenreServise genreServise;
 
-    @Autowired
-    private CometsServise cometsServise;
+    private final CometsServise cometsServise;
 
-    @Autowired
-    private LibUserService libUserService;
+    private final LibUserService libUserService;
+
+    private final AgeRateServise ageRateServise;
+
+    private final StatusServise statusServise;
+
+    public UserController(UserSevice userSevice, BookService bookService, GenreServise genreServise, CometsServise cometsServise, LibUserService libUserService, AgeRateServise ageRateServise, StatusServise statusServise) {
+        this.userSevice = userSevice;
+        this.bookService = bookService;
+        this.genreServise = genreServise;
+        this.cometsServise = cometsServise;
+        this.libUserService = libUserService;
+        this.ageRateServise = ageRateServise;
+        this.statusServise = statusServise;
+    }
 
     //Список пользователей_____________________________________________________________________________
 
@@ -678,7 +683,6 @@ public class UserController extends FileService {
     @GetMapping("addBook")
     public String getNewBook(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("genres", genreServise.findAll());
-        model.addAttribute("user",user);
         model.addAttribute("status",bookService.findAllStatus());
         model.addAttribute("ageRate",bookService.findAllAgeRate());
 
@@ -689,31 +693,72 @@ public class UserController extends FileService {
     public String addBook(
             @RequestParam String nameBook,
             @RequestParam String about,
-            @RequestParam String ageRate,
-            @RequestParam String status,
+            @RequestParam(required = false, defaultValue = "") String ageRate,
+            @RequestParam(required = false, defaultValue = "") String status,
             @AuthenticationPrincipal User user,
             @RequestParam Map<String, String> form,
             @RequestParam("file") MultipartFile file,
             Model model
     ) throws IOException {
-        if(file.isEmpty())
-        bookService.addBook(nameBook,about,form,ageRate,status,user,saveFile(file,1));
-        else
-            bookService.addBook(nameBook,about,form,ageRate,status,user,saveFile(file,2));
-        model.addAttribute("filenameUs", user.getUserImg());
-        model.addAttribute("filenamePr", user.getUserFontImg());
-        //fix
-        List<Book> books=bookService.findAllBooksUserWrite(user);
-        List<Book> books1=bookService.fixBook( books);
-        //__________________________________
-        model.addAttribute("books",books1);
+
         model.addAttribute("genres",genreServise.findAll());
         model.addAttribute("status",bookService.findAllStatus());
         model.addAttribute("ageRate",bookService.findAllAgeRate());
+
+        boolean error=false;
+        if(nameBook.isEmpty()){
+            model.addAttribute("nameBookError", "Введите название книги");
+            error=true;
+        }else{
+            model.addAttribute("nameBook",nameBook);
+        }
+
+        if(about.isEmpty()){
+            model.addAttribute("aboutError","Введите описание книги");
+            error=true;
+        }else{
+            model.addAttribute("about",about);
+        }
+
+        if(ageRate.isEmpty()){
+            model.addAttribute("ageRateError","Выберите возрастной рейтинг книги");
+            error=true;
+        }else{
+            model.addAttribute("ageRateCheack",ageRateServise.findByNameAgeRate(ageRate));
+        }
+
+        if(status.isEmpty()){
+            model.addAttribute("statusError","Выберите статус книги");
+            error=true;
+        }else{
+            model.addAttribute("statusCheack",statusServise.findByNameStatus(status));
+        }
+
+        if(!genreServise.genreSet(form)){
+            model.addAttribute("genreError","Выберите жанры книги");
+        }
+
+        if(error){
+            return "addBook";
+        }
+
+
+        if(file.isEmpty())
+        bookService.addBook(nameBook,about,form,ageRate,status,user,saveFile(file,1));
+        else bookService.addBook(nameBook,about,form,ageRate,status,user,saveFile(file,2));
+
+        //fix
+        List<Book> books=bookService.findAllBooksUserWrite(user);
+        List<Book> books1=bookService.fixBook( books);
+       //__________________________________
+
+        model.addAttribute("filenameUs", user.getUserImg());
+        model.addAttribute("filenamePr", user.getUserFontImg());
+        model.addAttribute("books",books1);
         return "userCarMyWritedBook";
     }
 
-
+    //Обновление страницы книги_____________________________
     @GetMapping("userCabUpdatePage")
     public String redactPagesBook(Model model, @AuthenticationPrincipal User user,@RequestParam String idBook) {
 

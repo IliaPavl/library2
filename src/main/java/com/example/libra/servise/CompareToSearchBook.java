@@ -15,7 +15,7 @@ class CompareToSearchBook implements Comparator<Book> {
     public int compare(Book o1, Book o2) {
         if(allTypes==0){
             //популярность
-            return o1.getLikes()- o2.getLikes();
+            return o2.getLikes()- o1.getLikes();
         }else if(allTypes==1){
             //дата обновления
             return o1.getDateUpdate().compareTo(o2.getDateUpdate());
@@ -26,11 +26,11 @@ class CompareToSearchBook implements Comparator<Book> {
         }
         else if(allTypes==3){
             //длинна
-            return o1.getLenghtBook()- o2.getLenghtBook();
+            return o2.getLenghtBook()- o1.getLenghtBook();
         }
         else {
             //просмотры
-            return o1.getViews()- o2.getViews();
+            return o2.getViews()- o1.getViews();
         }
     }
 }

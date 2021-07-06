@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GenreServise {
@@ -75,5 +76,17 @@ public class GenreServise {
             genre.setNameGenre(nameGenre);
             genreRepo.save(genre);
         }
+    }
+
+    public boolean genreSet(Map<String, String> form) {
+        ArrayList< Genre> genre=new ArrayList<>();
+        Genre genreBuff;
+        for (String key : form.keySet()) {
+            genreBuff=genreRepo.findByNameGenre(key);
+            if (genreBuff !=null ) {
+                return true;
+            }
+        }
+        return false;
     }
 }
